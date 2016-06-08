@@ -5,4 +5,5 @@ To run this example you must install DroneKit first:
   
 Usage: 
   python mission_basic.py --connect /dev/tty***
+ 
   *** serial port
