@@ -9,20 +9,20 @@ def connect(connection_string):
 	print 'Connected!'
 
 
-def goTo(direction , speed, orientation, turn_intensity):
+def manualControl(direction , speed, orientation, turn_intensity):
 	#Set channels
 	direction_ch = 2	
 	orientation_ch = 4	
 	
 	#Normalize speed	
-	if speed >= 0 and speed <=100	
+	if speed >= 0 and speed <=100:	
 		speed = speed * 5
 	else:
 		print 'Speed out of range (0~100).'
 		return
 
 	#Set direction
-	if direction == 'FORWARD'
+	if direction == 'FORWARD':
 		direction = 1500 + speed
 	elif direction == 'BACKWARD':
 		direction = 1500 - speed
@@ -33,14 +33,14 @@ def goTo(direction , speed, orientation, turn_intensity):
 		return		
 
 	#Normalize turn intensity	
-	if turn_intensity >= 0 and turn_intensity <=100	
+	if turn_intensity >= 0 and turn_intensity <=100:
 		turn_intensity = turn_intensity * 5
 	else:
 		print 'Turn intensity out of range (0~100).'
 		return
 		
 	#Set orientation
-	if orientation == 'RIGHT'
+	if orientation == 'RIGHT':
 		orientation = 1500 + turn_intensity
 	elif orientation == 'LEFT':
 		orientation = 1500 - turn_intensity
@@ -123,18 +123,37 @@ def debug():
 
 #
 connect("/dev/ttyUSB0")
+
 #
 arm()
+
 #
 changeMode("MANUAL")
-#
-goTo(direction , orientation, speed) 
+
+#FORWARD
+#manualControl('FORWARD', 50, 'NONE', 0)
+
+#FOWARD RIGHT
+#manualControl('FORWARD', 50, 'RIGHT', 50)
+
+#SPIN LEFT
+manualControl('NONE', 0, 'LEFT', 50)
+
+#BACKWARD
+#manualControl('BACKWARD', 50, 'NONE', 0)
+
+#BACKWARD RIGHT
+#manualControl('BACKWARD', 50, 'RIGHT', 50)
+
 #
 time.sleep(5)
+
 #
 changeMode("HOLD")
+
 #
 disarm()
+
 #
 disconnect()
 
