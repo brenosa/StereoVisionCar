@@ -9,14 +9,59 @@ def connect(connection_string):
 	print 'Connected!'
 
 
-def goTo(direction , orientation, speed):
+def goTo(direction , speed, orientation, turn_intensity):
+	#Set channels
+	direction_ch = 2	
+	orientation_ch = 4	
+	
+	#Normalize speed	
+	if speed >= 0 && speed <=100	
+		speed = speed * 5
+	else:
+		print 'Speed out of range (0~100).'
+		return
+
+	#Set direction
+	if direction == 'FORWARD'
+		direction = 1500 + speed
+	elif direction == 'BACKWARD':
+		direction = 1500 - speed
+	elif direction == 'NONE':
+		direction = 1500	
+	else:
+		print 'Unknown direction. Use \'FORWARD\', \'BACKWARD\' or \'NONE\').'
+		return		
+
+	#Normalize turn intensity	
+	if turn_intensity >= 0 && turn_intensity <=100	
+		turn_intensity = turn_intensity * 5
+	else:
+		print 'Turn intensity out of range (0~100).'
+		return
+		
+	#Set orientation
+	if orientation == 'RIGHT'
+		orientation = 1500 + turn_intensity
+	elif orientation == 'LEFT':
+		orientation = 1500 - turn_intensity
+	elif orientation == 'NONE':
+		orientation = 1500
+	else:
+		print 'Unknown orientation.'
+		return
+
 	# Override channels
 	print "\nChannel overrides: %s" % vehicle.channels.overrides
 
-	print "Set Ch2 override to 200 (indexing syntax)"
-	vehicle.channels.overrides['2'] = 1200
+	#Set direction
+	vehicle.channels.overrides[direction_ch] = direction
+
+	#Set orientation
+	vehicle.channels.overrides[orientation_ch] = orientation
+
+	#Debug
 	print " Channel overrides: %s" % vehicle.channels.overrides
-	print " Ch2 override: %s" % vehicle.channels.overrides['2']
+	
 
 
 def changeMode(mode):	  
@@ -93,5 +138,5 @@ disarm()
 #
 disconnect()
 
-#TODO create module/compass
+#TODO create module/compass/STATUS
 
