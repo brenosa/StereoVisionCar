@@ -1,18 +1,22 @@
 from dronekit import connect, VehicleMode
+from pymavlink import mavutil
 import time
 
+vehicle = 0
 
-def connect(connection_string):		 
+def connectVehicle(connection_string):
+	global vehicle		 
 	# Connect to the Vehicle
 	print 'Connecting to vehicle on: %s' % connection_string
-	vehicle = connect(connection_string, baud=921600, wait_ready=True)
+	vehicle = connect(connection_string, wait_ready=True, baud=921600)
 	print 'Connected!'
 
 
 def manualControl(direction , speed, orientation, turn_intensity):
+	global vehicle	
 	#Set channels
-	direction_ch = 2	
-	orientation_ch = 4	
+	direction_ch = 1	
+	orientation_ch = 3	
 	
 	#Normalize speed	
 	if speed >= 0 and speed <=100:	
@@ -64,14 +68,18 @@ def manualControl(direction , speed, orientation, turn_intensity):
 	
 
 
-def changeMode(mode):	  
+def changeMode(mode):	
+	global vehicle	
+	vehicle.mode = VehicleMode(mode)
 	while vehicle.mode != mode:
-		print "Setting to " + mode
-		vehicle.mode = VehicleMode(mode)
+		pass
+		#print "Setting to " + mode
+		
 	print 'Mode changed!'
 	
 	
 def disarm():
+	global vehicle	
 	vehicle.armed = False
 	while vehicle.armed:      
         	print " Waiting for disarming..."
@@ -79,12 +87,31 @@ def disarm():
 	print "Vehicle disarmed" 	
 
 def disconnect():
-	#Close vehicle object before exiting script
-	
+	global vehicle	
+	#Close vehicle object before exiting script	
 	vehicle.close()
 	print "Vehicle object closed"
 	
+
+def arm():
+	global vehicle	
+	print "Basic pre-arm checks"
+	# Don't try to arm until autopilot is ready
+	#while not vehicle.is_armable:
+		#print " Waiting for vehicle to initialise..."
+		#time.sleep(1)
+	
+	print "Arming motors"   	
+	vehicle.armed = True    
+
+	# Confirm vehicle armed before attempting to take off
+	while not vehicle.armed:      
+		print " Waiting for arming..."
+		time.sleep(1)
+		
+
 def status():
+	global vehicle	
 	# vehicle is an instance of the Vehicle class
 	print "Autopilot Firmware version: %s" % vehicle.version
 	print "Autopilot capabilities (supports ftp): %s" % vehicle.capabilities.ftp
@@ -109,22 +136,9 @@ def status():
 	print "Mode: %s" % vehicle.mode.name    # settable
 	print "Armed: %s" % vehicle.armed    # settable
 
-def arm():
-	print "Basic pre-arm checks"
-    	# Don't try to arm until autopilot is ready
-    	while not vehicle.is_armable:
-        	print " Waiting for vehicle to initialise..."
-        	time.sleep(1)
-        
-    	print "Arming motors"   	
-    	vehicle.armed = True    
-
-    	# Confirm vehicle armed before attempting to take off
-    	while not vehicle.armed:      
-        	print " Waiting for arming..."
-        	time.sleep(1)
    
 def debug():
+	global vehicle	
 	print "Param: %s" % vehicle.parameters['ARMING_CHECK']
 
 	# Get all original channel values (before override)
@@ -144,16 +158,17 @@ def debug():
 
 
 #
-connect("/dev/ttyUSB0")
+connectVehicle('/dev/ttyUSB0')
 
 #
-status()
+#status()
 
 #
 arm()
 
 #
-changeMode("MANUAL")
+changeMode('MANUAL')
+status()
 
 #FORWARD
 #manualControl('FORWARD', 50, 'NONE', 0)
@@ -162,25 +177,29 @@ changeMode("MANUAL")
 #manualControl('FORWARD', 50, 'RIGHT', 50)
 
 #SPIN LEFT
-manualControl('NONE', 0, 'LEFT', 50)
+#manualControl('NONE', 0, 'LEFT', 50)
 
 #BACKWARD
 #manualControl('BACKWARD', 50, 'NONE', 0)
 
 #BACKWARD RIGHT
 #manualControl('BACKWARD', 50, 'RIGHT', 50)
+print "\nChannel overrides: %s" % vehicle.channels.overrides
+while True:
+	vehicle.channels.overrides[3] = 1800
+print "\nChannel overrides: %s" % vehicle.channels
+
 
 #
 time.sleep(5)
 
 #
-changeMode("HOLD")
-
+changeMode('HOLD')
+#status()
 #
-disarm()
+#disarm()
 
 #
 disconnect()
 
 #TODO create module/compass/STATUS
-
