@@ -47,7 +47,7 @@ def manualControl(direction , speed, orientation, turn_intensity):
 	elif orientation == 'NONE':
 		orientation = 1500
 	else:
-		print 'Unknown orientation.'
+		print 'Unknown direction. Use \'RIGHT\', \'LEFT\' or \'NONE\').'
 		return
 
 	# Override channels
