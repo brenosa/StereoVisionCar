@@ -15,7 +15,7 @@ def goTo(direction , speed, orientation, turn_intensity):
 	orientation_ch = 4	
 	
 	#Normalize speed	
-	if speed >= 0 && speed <=100	
+	if speed >= 0 and speed <=100	
 		speed = speed * 5
 	else:
 		print 'Speed out of range (0~100).'
@@ -33,7 +33,7 @@ def goTo(direction , speed, orientation, turn_intensity):
 		return		
 
 	#Normalize turn intensity	
-	if turn_intensity >= 0 && turn_intensity <=100	
+	if turn_intensity >= 0 and turn_intensity <=100	
 		turn_intensity = turn_intensity * 5
 	else:
 		print 'Turn intensity out of range (0~100).'
