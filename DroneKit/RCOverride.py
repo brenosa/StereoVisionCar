@@ -11,12 +11,15 @@ def connectVehicle(connection_string):
 	vehicle = connect(connection_string, wait_ready=True, baud=921600)
 	print 'Connected!'
 
+#
+#CHANGE SYSID_GSC PARAMETER TO 255 FIRST!
+#
 
-def manualControl(direction , speed, orientation, turn_intensity):
+def manualControl(throttle , speed, steering, steer_intensity):
 	global vehicle	
 	#Set channels
-	direction_ch = 1	
-	orientation_ch = 3	
+	throttle_channel = 1	
+	steer_channel = 3	
 	
 	#Normalize speed	
 	if speed >= 0 and speed <=100:	
@@ -25,31 +28,31 @@ def manualControl(direction , speed, orientation, turn_intensity):
 		print 'Speed out of range (0~100).'
 		return
 
-	#Set direction
-	if direction == 'FORWARD':
-		direction = 1500 + speed
-	elif direction == 'BACKWARD':
-		direction = 1500 - speed
-	elif direction == 'NONE':
-		direction = 1500	
+	#Set throttle
+	if throttle == 'FORWARD':
+		throttle = 1500 + speed
+	elif throttle == 'BACKWARD':
+		throttle = 1500 - speed
+	elif throttle == 'NONE':
+		throttle = 1500	
 	else:
-		print 'Unknown direction. Use \'FORWARD\', \'BACKWARD\' or \'NONE\').'
+		print 'Unknown throttle. Use \'FORWARD\', \'BACKWARD\' or \'NONE\').'
 		return		
 
 	#Normalize turn intensity	
-	if turn_intensity >= 0 and turn_intensity <=100:
-		turn_intensity = turn_intensity * 5
+	if steer_intensity >= 0 and steer_intensity <=100:
+		steer_intensity = steer_intensity * 5
 	else:
 		print 'Turn intensity out of range (0~100).'
 		return
 		
-	#Set orientation
-	if orientation == 'RIGHT':
-		orientation = 1500 + turn_intensity
-	elif orientation == 'LEFT':
-		orientation = 1500 - turn_intensity
-	elif orientation == 'NONE':
-		orientation = 1500
+	#Set steering
+	if steering == 'RIGHT':
+		steering = 1500 + steer_intensity
+	elif steering == 'LEFT':
+		steering = 1500 - steer_intensity
+	elif steering == 'NONE':
+		steering = 1500
 	else:
 		print 'Unknown direction. Use \'RIGHT\', \'LEFT\' or \'NONE\').'
 		return
@@ -57,11 +60,11 @@ def manualControl(direction , speed, orientation, turn_intensity):
 	# Override channels
 	print "\nChannel overrides: %s" % vehicle.channels.overrides
 
-	#Set direction
-	vehicle.channels.overrides[direction_ch] = direction
+	#Set throttle
+	vehicle.channels.overrides[throttle_channel] = throttle
 
-	#Set orientation
-	vehicle.channels.overrides[orientation_ch] = orientation
+	#Set steering
+	vehicle.channels.overrides[steer_channel] = steering
 
 	#Debug
 	print " Channel overrides: %s" % vehicle.channels.overrides
@@ -168,7 +171,7 @@ arm()
 
 #
 changeMode('MANUAL')
-status()
+#status()
 
 #FORWARD
 #manualControl('FORWARD', 50, 'NONE', 0)
@@ -177,22 +180,22 @@ status()
 #manualControl('FORWARD', 50, 'RIGHT', 50)
 
 #SPIN LEFT
-#manualControl('NONE', 0, 'LEFT', 50)
+manualControl('NONE', 0, 'LEFT', 50)
 
 #BACKWARD
 #manualControl('BACKWARD', 50, 'NONE', 0)
 
 #BACKWARD RIGHT
 #manualControl('BACKWARD', 50, 'RIGHT', 50)
-print "\nChannel overrides: %s" % vehicle.channels.overrides
-while True:
-	vehicle.channels.overrides[3] = 1800
-print "\nChannel overrides: %s" % vehicle.channels
+#print "\nChannel overrides: %s" % vehicle.channels.overrides
+#while True:
+#	vehicle.channels.overrides[3] = 1800
+#print "\nChannel overrides: %s" % vehicle.channels
 
 
 #
-time.sleep(5)
-
+time.sleep(10)
+print 'slept'
 #
 changeMode('HOLD')
 #status()
