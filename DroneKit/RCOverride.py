@@ -44,14 +44,6 @@ def distanceSensor():
 			manualControl('FORWARD', 20, 'NONE', 0)		
 	GPIO.cleanup()
 
-def connectVehicle(connection_string):
-	global vehicle		 
-	# Connect to the Vehicle
-	print 'Connecting to vehicle on: %s' % connection_string
-	vehicle = connect(connection_string, wait_ready=True, baud=921600)
-	print 'Connected!'
-
-
 def manualControl(throttle , speed, steering, steer_intensity):
 	global vehicle	
 	#Set channels
@@ -111,8 +103,19 @@ def manualControl(throttle , speed, steering, steer_intensity):
 	#Debug
 	print " Channel overrides: %s" % vehicle.channels.overrides
 	
+def connectVehicle(connection_string):
+	global vehicle		 
+	# Connect to the Vehicle
+	print 'Connecting to vehicle on: %s' % connection_string
+	vehicle = connect(connection_string, wait_ready=True, baud=921600)
+	print 'Connected!'
 
-
+def disconnectVehicle():
+	global vehicle	
+	#Close vehicle object before exiting script	
+	vehicle.close()
+	print "Vehicle object closed"
+	
 def changeMode(mode):	
 	global vehicle	
 	vehicle.mode = VehicleMode(mode)
@@ -121,8 +124,7 @@ def changeMode(mode):
 		#Debug
 		#print "Setting to " + mode
 		
-	print 'Mode changed!'
-	
+	print 'Mode changed!'	
 	
 def disarm():
 	global vehicle	
@@ -130,14 +132,7 @@ def disarm():
 	while vehicle.armed:      
         	print " Waiting for disarming..."
         	time.sleep(1)
-	print "Vehicle disarmed" 	
-
-def disconnect():
-	global vehicle	
-	#Close vehicle object before exiting script	
-	vehicle.close()
-	print "Vehicle object closed"
-	
+	print "Vehicle disarmed" 
 
 def arm():
 	global vehicle	
@@ -236,6 +231,6 @@ changeMode('HOLD')
 disarm()
 
 #
-disconnect()
+disconnectVehicle()
 
 #TODO create module/compass
