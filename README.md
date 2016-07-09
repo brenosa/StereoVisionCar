@@ -4,10 +4,12 @@ To run this example you must install DroneKit first:
   http://python.dronekit.io/guide/quick_start.html#installation
   
 Usage: 
+
+  python RCOverride.py
+  
   python mission_basic.py --connect /dev/tty***
  
   *** serial port
   
-          or
   
-  python RCOverride.py
+  
