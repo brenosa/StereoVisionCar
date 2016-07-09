@@ -1,8 +1,48 @@
 from dronekit import connect, VehicleMode
 from pymavlink import mavutil
+from threading import Thread
+import RPi.GPIO as GPIO
 import time
 
 vehicle = 0
+GPIO.setmode(GPIO.BCM)
+
+#
+#CHANGE SYSID_GSC PARAMETER TO 255 FIRST!
+#
+
+def distanceSensor():
+
+	TRIG = 23 
+	ECHO = 24
+
+	print "Distance Measurement In Progress"
+
+	GPIO.setup(TRIG,GPIO.OUT)
+	GPIO.setup(ECHO,GPIO.IN)
+
+	while True:  
+		GPIO.output(TRIG, False)
+		time.sleep(2)
+		GPIO.output(TRIG, True)
+		time.sleep(0.00001)
+		GPIO.output(TRIG, False)
+		while GPIO.input(ECHO)==0:
+			pulse_start = time.time()
+		while GPIO.input(ECHO)==1:
+			pulse_end = time.time()
+		pulse_duration = pulse_end - pulse_start
+		distance = pulse_duration * 17150
+		distance = round(distance, 2)
+		print "Distance:",distance,"cm"
+		if distance <= 60:
+			#STOP
+			manualControl('NONE', 0, 'NONE', 0)			
+			print "HOLD",distance,"cm"
+		else				
+			#FORWARD
+			manualControl('FORWARD', 20, 'NONE', 0)		
+	GPIO.cleanup()
 
 def connectVehicle(connection_string):
 	global vehicle		 
@@ -11,9 +51,6 @@ def connectVehicle(connection_string):
 	vehicle = connect(connection_string, wait_ready=True, baud=921600)
 	print 'Connected!'
 
-#
-#CHANGE SYSID_GSC PARAMETER TO 255 FIRST!
-#
 
 def manualControl(throttle , speed, steering, steer_intensity):
 	global vehicle	
@@ -67,7 +104,10 @@ def manualControl(throttle , speed, steering, steer_intensity):
 
 	#Set steering
 	vehicle.channels.overrides[steer_channel] = steering
-
+	
+	#vehicle.channels.overrides[throttle_channel] = None
+	#vehicle.channels.overrides[steer_channel] = None
+	
 	#Debug
 	print " Channel overrides: %s" % vehicle.channels.overrides
 	
@@ -78,6 +118,7 @@ def changeMode(mode):
 	vehicle.mode = VehicleMode(mode)
 	while vehicle.mode != mode:
 		pass
+		#Debug
 		#print "Setting to " + mode
 		
 	print 'Mode changed!'
@@ -147,45 +188,54 @@ connectVehicle('/dev/ttyUSB0')
 #
 #status()
 
+vehicle.parameters['FS_THR_ENABLE']=1
+vehicle.parameters['FS_THR_VALUE']=1
+vehicle.parameters['FS_TIMEOUT']=100
+vehicle.parameters['FS_ACTION']=0
+vehicle.parameters['FS_GCS_ENABLE']=0
+
+
 #
 arm()
-
 #
 changeMode('MANUAL')
-#status()
-
-#FORWARD
-#manualControl('FORWARD', 50, 'NONE', 0)
-
-#FOWARD RIGHT
-#manualControl('FORWARD', 50, 'RIGHT', 50)
-
-#STOP
-#manualControl('NONE', 0, 'NONE', #0)
-
-#SPIN LEFT
-manualControl('NONE', 0, 'LEFT', 20)
 
 #
-time.sleep(10)
-print 'slept'
+#t = Thread(target=distanceSensor)
+#t.start()
 
-#BACKWARD
-#manualControl('BACKWARD', 20, 'NONE', 0)
+#
+distanceSensor()
 
-#BACKWARD RIGHT
-#manualControl('BACKWARD', 50, 'RIGHT', 50)
 
-#time.sleep(10)
-#print 'slept2'
+	#*****************************************Commands examples*********************************************#
+									#FORWARD
+									#manualControl('FORWARD', 20, 'NONE', 0)
+
+									#FOWARD RIGHT
+									#manualControl('FORWARD', 50, 'RIGHT', 50)
+
+									#STOP
+									#manualControl('NONE', 0, 'NONE', #0)
+
+									#SPIN LEFT
+									#manualControl('NONE', 0, 'LEFT', 30)
+
+									#BACKWARD
+									#manualControl('BACKWARD', 20, 'NONE', 0)
+
+									#BACKWARD RIGHT
+									#manualControl('BACKWARD', 50, 'RIGHT', 50)
+
+	#********************************************************************************************************#
 
 #
 changeMode('HOLD')
-#status()
+
 #
-#disarm()
+disarm()
 
 #
 disconnect()
 
-#TODO create module/compass/STATUS
+#TODO create module/compass
