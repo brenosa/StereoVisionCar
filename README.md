@@ -7,3 +7,7 @@ Usage:
   python mission_basic.py --connect /dev/tty***
  
   *** serial port
+  
+          or
+  
+  python RCOverride.py
