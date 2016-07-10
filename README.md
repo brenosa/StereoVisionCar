@@ -2,11 +2,11 @@
 
   To run this example you must install DroneKit first:
   
-    http://python.dronekit.io/guide/quick_start.html#installation
+  http://python.dronekit.io/guide/quick_start.html#installation
   
   And python GPIO library:
   
-    https://github.com/derekstavis/python-sysfs-gpio
+  https://github.com/derekstavis/python-sysfs-gpio
   
 Usage: 
 
