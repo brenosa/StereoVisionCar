@@ -4,6 +4,10 @@
   
     http://python.dronekit.io/guide/quick_start.html#installation
   
+  And python GPIO library:
+  
+    https://github.com/derekstavis/python-sysfs-gpio
+  
 Usage: 
 
     python RCOverride.py
@@ -11,11 +15,7 @@ Usage:
     python mission_basic.py --connect /dev/tty***
  
   *** serial port
-  
-  
-  To install the python GPIO library go to:
-  
-    https://github.com/derekstavis/python-sysfs-gpio
+
   
   
   
