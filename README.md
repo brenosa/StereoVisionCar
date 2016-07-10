@@ -12,6 +12,8 @@ Usage:
 
     python RCOverride.py
   
+  or
+  
     python mission_basic.py --connect /dev/tty***
  
   *** serial port
