@@ -1,11 +1,12 @@
 from dronekit import connect, VehicleMode
 from pymavlink import mavutil
 from threading import Thread
-import RPi.GPIO as GPIO
+from twisted.internet import reactor
+from sysfs.gpio import Controller, OUTPUT, INPUT, RISING
 import time
 
 vehicle = 0
-GPIO.setmode(GPIO.BCM)
+
 
 #
 #CHANGE SYSID_GSC PARAMETER TO 255 FIRST!
@@ -13,23 +14,22 @@ GPIO.setmode(GPIO.BCM)
 
 def distanceSensor():
 
-	TRIG = 23 
-	ECHO = 24
+	Controller.available_pins = [23, 24]
+
+	TRIG =  Controller.alloc_pin(23, OUTPUT)
+	ECHO = Controller.alloc_pin(24, INPUT)
 
 	print "Distance Measurement In Progress"
 
-	GPIO.setup(TRIG,GPIO.OUT)
-	GPIO.setup(ECHO,GPIO.IN)
-
 	while True:  
-		GPIO.output(TRIG, False)
+		TRIG.reset()
 		time.sleep(2)
-		GPIO.output(TRIG, True)
+		TRIG.set()
 		time.sleep(0.00001)
-		GPIO.output(TRIG, False)
-		while GPIO.input(ECHO)==0:
+		TRIG.reset()
+		while ECHO.read()==0:
 			pulse_start = time.time()
-		while GPIO.input(ECHO)==1:
+		while ECHO.read()==1:
 			pulse_end = time.time()
 		pulse_duration = pulse_end - pulse_start
 		distance = pulse_duration * 17150
@@ -39,7 +39,7 @@ def distanceSensor():
 			#STOP
 			manualControl('NONE', 0, 'NONE', 0)			
 			print "HOLD",distance,"cm"
-		else				
+		else:				
 			#FORWARD
 			manualControl('FORWARD', 20, 'NONE', 0)		
 	GPIO.cleanup()
