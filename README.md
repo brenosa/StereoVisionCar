@@ -1,15 +1,21 @@
 # StereoVisionCar
 
-To run this example you must install DroneKit first:
-  http://python.dronekit.io/guide/quick_start.html#installation
+  To run this example you must install DroneKit first:
+  
+    http://python.dronekit.io/guide/quick_start.html#installation
   
 Usage: 
 
-  python RCOverride.py
+    python RCOverride.py
   
-  python mission_basic.py --connect /dev/tty***
+    python mission_basic.py --connect /dev/tty***
  
   *** serial port
+  
+  
+  To install the python GPIO library go to:
+  
+    https://github.com/derekstavis/python-sysfs-gpio
   
   
   
