@@ -14,10 +14,12 @@ vehicle = 0
 
 def distanceSensor():
 
-	Controller.available_pins = [23, 24]
+	Controller.available_pins = [13, 29]
 
-	TRIG =  Controller.alloc_pin(23, OUTPUT)
-	ECHO = Controller.alloc_pin(24, INPUT)
+	TRIG =  Controller.alloc_pin(13, OUTPUT)
+	ECHO = Controller.alloc_pin(29, INPUT)
+
+	reactor.run()
 
 	print "Distance Measurement In Progress"
 
@@ -33,16 +35,15 @@ def distanceSensor():
 			pulse_end = time.time()
 		pulse_duration = pulse_end - pulse_start
 		distance = pulse_duration * 17150
-		distance = round(distance, 2)
-		print "Distance:",distance,"cm"
+		distance = round(distance, 2)		
 		if distance <= 60:
 			#STOP
-			manualControl('NONE', 0, 'NONE', 0)			
+			#manualControl('NONE', 0, 'NONE', 0)			
 			print "HOLD",distance,"cm"
 		else:				
 			#FORWARD
-			manualControl('FORWARD', 20, 'NONE', 0)		
-	GPIO.cleanup()
+			#manualControl('FORWARD', 20, 'NONE', 0)	
+			print "FORWARD:",distance,"cm"		
 
 def manualControl(throttle , speed, steering, steer_intensity):
 	global vehicle	
@@ -178,22 +179,23 @@ def status():
 	print "Armed: %s" % vehicle.armed    # settable   
 
 #
-connectVehicle('/dev/ttyUSB0')
+#connectVehicle('/dev/ttyUSB0')
 
 #
 #status()
 
-vehicle.parameters['FS_THR_ENABLE']=1
-vehicle.parameters['FS_THR_VALUE']=1
-vehicle.parameters['FS_TIMEOUT']=100
-vehicle.parameters['FS_ACTION']=0
-vehicle.parameters['FS_GCS_ENABLE']=0
+	#vehicle.parameters['FS_THR_ENABLE']=1
+	#vehicle.parameters['FS_THR_VALUE']=1
+	#vehicle.parameters['FS_TIMEOUT']=100
+	#vehicle.parameters['FS_ACTION']=0
+	#vehicle.parameters['FS_GCS_ENABLE']=0
 
 
 #
-arm()
+#arm()
+
 #
-changeMode('MANUAL')
+#changeMode('MANUAL')
 
 #
 #t = Thread(target=distanceSensor)
@@ -225,12 +227,12 @@ distanceSensor()
 	#********************************************************************************************************#
 
 #
-changeMode('HOLD')
+#changeMode('HOLD')
 
 #
-disarm()
+#disarm()
 
 #
-disconnectVehicle()
+#disconnectVehicle()
 
 #TODO create module/compass
