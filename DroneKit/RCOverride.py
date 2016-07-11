@@ -21,7 +21,6 @@ def distanceSensor():
 	
 	pulse_start = 0
 	pulse_end = 0
-	print "Distance Measurement In Progress"
 
 	#
 	arm()
@@ -39,7 +38,7 @@ def distanceSensor():
 		while ECHO.read()==0:
 			pulse_start = time.time()
 			if pulse_start - begin > 0.5:
-				print "parou"
+				print "TIMEOUT"
 				break			
 		while ECHO.read()==1:
 			pulse_end = time.time()
@@ -51,6 +50,11 @@ def distanceSensor():
 			#STOP
 			manualControl('NONE', 0, 'NONE', 0)			
 			print "HOLD",distance,"cm"
+			#SPIN LEFT
+			manualControl('NONE', 0, 'LEFT', 50)
+			time.sleep(1)
+			#STOP
+			manualControl('NONE', 0, 'NONE', 0)
 		else:				
 			#FORWARD
 			manualControl('FORWARD', 50, 'NONE', 0)	
@@ -77,7 +81,7 @@ def manualControl(throttle , speed, steering, steer_intensity):
 	elif throttle == 'NONE':
 		throttle = 1500	
 	else:
-		print 'Unknown throttle. Use \'FORWARD\', \'BACKWARD\' or \'NONE\').'
+		print 'Unknown throttle. Use \'FORWARD\', \'BACKWARD\' or \'NONE\'.'
 		return		
 
 	#Normalize turn intensity	
@@ -106,13 +110,7 @@ def manualControl(throttle , speed, steering, steer_intensity):
 
 	#Set steering
 	vehicle.channels.overrides[steer_channel] = steering
-	
-	#vehicle.channels.overrides[throttle_channel] = None
-	#vehicle.channels.overrides[steer_channel] = None
-	
-	#Debug
-	#print " Channel overrides: %s" % vehicle.channels.overrides
-	
+
 def connectVehicle(connection_string):
 	global vehicle		 
 	# Connect to the Vehicle
@@ -191,18 +189,14 @@ def status():
 connectVehicle('/dev/ttyUSB0')
 
 #
-status()
+#status()
 
-	#vehicle.parameters['FS_THR_ENABLE']=1
-	#vehicle.parameters['FS_THR_VALUE']=1
-	#vehicle.parameters['FS_TIMEOUT']=100
-	#vehicle.parameters['FS_ACTION']=0
+vehicle.parameters['FS_THR_ENABLE']=1
+	#vehicle.parameters['FS_THR_VALUE']=1000
+	#vehicle.parameters['FS_TIMEOUT']=10
+	#vehicle.parameters['FS_ACTION']=3
 	#vehicle.parameters['FS_GCS_ENABLE']=0
 
-
-#
-#t = Thread(target=distanceSensor)
-#t.start()
 
 #
 distanceSensor()
