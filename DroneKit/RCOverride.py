@@ -14,35 +14,46 @@ vehicle = 0
 
 def distanceSensor():
 
-	Controller.available_pins = [13, 29]
+	Controller.available_pins = [38, 219]
 
-	TRIG =  Controller.alloc_pin(13, OUTPUT)
-	ECHO = Controller.alloc_pin(29, INPUT)
-
-	reactor.run()
-
+	TRIG =  Controller.alloc_pin(219, OUTPUT)
+	ECHO = Controller.alloc_pin(38, INPUT)	
+	
+	pulse_start = 0
+	pulse_end = 0
 	print "Distance Measurement In Progress"
+
+	#
+	arm()
+
+	#
+	changeMode('MANUAL')
 
 	while True:  
 		TRIG.reset()
-		time.sleep(2)
+		time.sleep(0.001)
 		TRIG.set()
-		time.sleep(0.00001)
+		time.sleep(0.001)
 		TRIG.reset()
+		begin = time.time()
 		while ECHO.read()==0:
 			pulse_start = time.time()
+			if pulse_start - begin > 0.5:
+				print "parou"
+				break			
 		while ECHO.read()==1:
 			pulse_end = time.time()
+			
 		pulse_duration = pulse_end - pulse_start
 		distance = pulse_duration * 17150
 		distance = round(distance, 2)		
 		if distance <= 60:
 			#STOP
-			#manualControl('NONE', 0, 'NONE', 0)			
+			manualControl('NONE', 0, 'NONE', 0)			
 			print "HOLD",distance,"cm"
 		else:				
 			#FORWARD
-			#manualControl('FORWARD', 20, 'NONE', 0)	
+			manualControl('FORWARD', 50, 'NONE', 0)	
 			print "FORWARD:",distance,"cm"		
 
 def manualControl(throttle , speed, steering, steer_intensity):
@@ -88,10 +99,8 @@ def manualControl(throttle , speed, steering, steer_intensity):
 		return
 
 	# Override channels
-	print "\nChannel overrides: %s" % vehicle.channels.overrides
-	#run_time = 0
-	#while run_time < 5:
-	#time.sleep(1)
+	#print "\nChannel overrides: %s" % vehicle.channels.overrides
+
 	#Set throttle
 	vehicle.channels.overrides[throttle_channel] = throttle
 
@@ -102,7 +111,7 @@ def manualControl(throttle , speed, steering, steer_intensity):
 	#vehicle.channels.overrides[steer_channel] = None
 	
 	#Debug
-	print " Channel overrides: %s" % vehicle.channels.overrides
+	#print " Channel overrides: %s" % vehicle.channels.overrides
 	
 def connectVehicle(connection_string):
 	global vehicle		 
@@ -179,10 +188,10 @@ def status():
 	print "Armed: %s" % vehicle.armed    # settable   
 
 #
-#connectVehicle('/dev/ttyUSB0')
+connectVehicle('/dev/ttyUSB0')
 
 #
-#status()
+status()
 
 	#vehicle.parameters['FS_THR_ENABLE']=1
 	#vehicle.parameters['FS_THR_VALUE']=1
@@ -190,12 +199,6 @@ def status():
 	#vehicle.parameters['FS_ACTION']=0
 	#vehicle.parameters['FS_GCS_ENABLE']=0
 
-
-#
-#arm()
-
-#
-#changeMode('MANUAL')
 
 #
 #t = Thread(target=distanceSensor)
@@ -227,12 +230,12 @@ distanceSensor()
 	#********************************************************************************************************#
 
 #
-#changeMode('HOLD')
+changeMode('HOLD')
 
 #
-#disarm()
+disarm()
 
 #
-#disconnectVehicle()
+disconnectVehicle()
 
 #TODO create module/compass
