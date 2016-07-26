@@ -7,11 +7,6 @@ import time
 
 vehicle = 0
 
-
-#
-#CHANGE SYSID_GSC PARAMETER TO 255 FIRST!
-#
-
 def distanceSensor():
 
 	Controller.available_pins = [38, 219]
@@ -185,24 +180,24 @@ def status():
 	print "Mode: %s" % vehicle.mode.name    # settable
 	print "Armed: %s" % vehicle.armed    # settable   
 
-#
+#Connect to Pixhawk in the specified port
 connectVehicle('/dev/ttyUSB0')
 
-#
+#Get all avaible vehicle status
 #status()
 
-vehicle.parameters['FS_THR_ENABLE']=1
-	#vehicle.parameters['FS_THR_VALUE']=1000
-	#vehicle.parameters['FS_TIMEOUT']=10
-	#vehicle.parameters['FS_ACTION']=3
-	#vehicle.parameters['FS_GCS_ENABLE']=0
 
+#CHANGE SYSID_GSC PARAMETER TO 255 BEFORE FIRST USE
+#vehicle.parameters['SYSID_GSC']=255
 
-#
+#MAKE SURE FS_THR_ENABLE IS ENABLED
+#vehicle.parameters['FS_THR_ENABLE']=1
+
+#Start automatic mode, avoiding obstacles
 distanceSensor()
 
 
-	#*****************************************Commands examples*********************************************#
+	#*****************************************Manual commands examples*********************************************#
 									#FORWARD
 									#manualControl('FORWARD', 20, 'NONE', 0)
 
@@ -210,7 +205,7 @@ distanceSensor()
 									#manualControl('FORWARD', 50, 'RIGHT', 50)
 
 									#STOP
-									#manualControl('NONE', 0, 'NONE', #0)
+									#manualControl('NONE', 0, 'NONE', 0)
 
 									#SPIN LEFT
 									#manualControl('NONE', 0, 'LEFT', 30)
@@ -223,13 +218,11 @@ distanceSensor()
 
 	#********************************************************************************************************#
 
-#
+#Set mode to HOLD after use
 changeMode('HOLD')
 
-#
+#Disarm vehicle after use
 disarm()
 
-#
+#Disconnect from Pixhawk
 disconnectVehicle()
-
-#TODO create module/compass
