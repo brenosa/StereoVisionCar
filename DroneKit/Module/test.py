@@ -3,7 +3,7 @@ import RCOverideAPI
 #Connect to Pixhawk in the specified port
 RCOverideAPI.connectVehicle('/dev/ttyUSB0')
 
-#Get all avaible vehicle status
+#Get all available vehicle status
 #RCOverideAPI.status()
 
 #CHANGE SYSID_GSC PARAMETER TO 255 BEFORE FIRST USE
