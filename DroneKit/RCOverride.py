@@ -8,7 +8,7 @@ import time
 vehicle = 0
 
 def distanceSensor():
-
+	# Sensor pins
 	Controller.available_pins = [38, 219]
 
 	TRIG =  Controller.alloc_pin(219, OUTPUT)
@@ -17,10 +17,10 @@ def distanceSensor():
 	pulse_start = 0
 	pulse_end = 0
 
-	#
+	#Arm vehicle
 	arm()
 
-	#
+	#Change mode to MANUAL
 	changeMode('MANUAL')
 
 	while True:  
@@ -40,7 +40,8 @@ def distanceSensor():
 			
 		pulse_duration = pulse_end - pulse_start
 		distance = pulse_duration * 17150
-		distance = round(distance, 2)		
+		distance = round(distance, 2)
+		#Set minimum distance to stop and turn around before the obstacle
 		if distance <= 60:
 			#STOP
 			manualControl('NONE', 0, 'NONE', 0)			
@@ -97,7 +98,7 @@ def manualControl(throttle , speed, steering, steer_intensity):
 		print 'Unknown direction. Use \'RIGHT\', \'LEFT\' or \'NONE\').'
 		return
 
-	# Override channels
+	#DEBUG
 	#print "\nChannel overrides: %s" % vehicle.channels.overrides
 
 	#Set throttle
@@ -152,8 +153,7 @@ def arm():
 	while not vehicle.armed:      
 		print " Waiting for arming..."
 		time.sleep(1)
-		
-
+	
 def status():
 	global vehicle	
 	# vehicle is an instance of the Vehicle class
@@ -185,7 +185,6 @@ connectVehicle('/dev/ttyUSB0')
 
 #Get all avaible vehicle status
 #status()
-
 
 #CHANGE SYSID_GSC PARAMETER TO 255 BEFORE FIRST USE
 #vehicle.parameters['SYSID_GSC']=255
