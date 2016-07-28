@@ -12,11 +12,15 @@
 
   - Connect the Pixhawk to the Jetson/RPi using the Serial/USB converter cable;
 
-  - Depending on the USB port it is connected, either the USB0 or USB1, be sure to check it and change it in the code, if necessary; the default is USB0.
+  - Depending on the USB port it is connected, either the USB0 or USB1, be sure to check it and change it in the code, if necessary; the default is USB0.*
  
 		#Connect to Pixhawk in the specified port
 
 		connectVehicle('/dev/ttyUSB0')
+		
+	*Use the following command to list all ports
+	
+		$ dmesg | grep tty
       
 ## Usage
 
