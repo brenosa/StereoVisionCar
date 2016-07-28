@@ -1,4 +1,4 @@
-# StereoVisionCar
+# Stereo Vision Car using Jetson
 
 ## Requisites
 
@@ -6,11 +6,11 @@
   
   http://python.dronekit.io/guide/quick_start.html#installation
   
-  - And python GPIO library:
+  - And python GPIO library (for ultrasonic sensor):
   
   https://github.com/derekstavis/python-sysfs-gpio
 
-  - Connect the Pixhawk to the Jetson/RPi using the Serial/USB converter cable;
+  - Connect the Pixhawk to the Jetson using the Serial/USB converter cable;
 
   - Depending on the USB port it is connected, either the USB0 or USB1, be sure to check it and change it in the code, if necessary; the default is USB0.*
  
