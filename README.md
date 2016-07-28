@@ -1,5 +1,7 @@
 # StereoVisionCar
 
+## Requisites
+
   - To run this example you must install DroneKit first:
   
   http://python.dronekit.io/guide/quick_start.html#installation
@@ -14,16 +16,12 @@
 	#Connect to Pixhawk in the specified port
         connectVehicle('/dev/ttyUSB0')
       
-- Usage
-
-- Paste the code from Appendix  II in a file and save it as example.py ; 
-
-- Navigate to the example code folder using the Terminal;
+## Usage
 
 - Type the following command sequence:
 
     $screen
-    $sudo python example.py
+    $sudo python RCOveride.py
 
 - After a successful connection, the program will start outputting the distances in the screen, unplug the network cable and arm the vehicle by holding the switch for 5 seconds;
 
