@@ -14,9 +14,9 @@
 
   - Depending on the USB port it is connected, either the USB0 or USB1, be sure to check it and change it in the code, if necessary; the default is USB0.
  
-			#Connect to Pixhawk in the specified port
+		#Connect to Pixhawk in the specified port
 
-			connectVehicle('/dev/ttyUSB0')
+		connectVehicle('/dev/ttyUSB0')
       
 ## Usage
 
