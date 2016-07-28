@@ -26,8 +26,8 @@
 
 - Type the following command sequence:
 
-		$screen
-		$sudo python RCOverride.py
+		$ screen
+		$ sudo python RCOverride.py
 
 - After a successful connection, the program will start outputting the distances in the screen, unplug the network cable and arm the vehicle by holding the switch for 5 seconds;
 
