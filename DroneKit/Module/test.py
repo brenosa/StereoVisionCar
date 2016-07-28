@@ -1,4 +1,4 @@
-import RCOverideAPI
+import RCOverrideAPI
 
 #Connect to Pixhawk in the specified port
 RCOverideAPI.connectVehicle('/dev/ttyUSB0')
